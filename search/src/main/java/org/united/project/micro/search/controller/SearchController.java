@@ -1,4 +1,4 @@
-package org.united.project.micro.discovery.controller;
+package org.united.project.micro.search.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

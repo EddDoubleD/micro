@@ -1,0 +1,13 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: search
+    devtools:
+      restart:
+        enabled=true:
+eureka:
+  instance:
+    instance-id: ${spring:application:name}:${spring:application:instance_id:${random:value}}
+
