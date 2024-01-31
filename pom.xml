@@ -10,8 +10,9 @@
 
 	<modules>
 		<module>discovery</module>
-		<module>consumer</module>
-		<module>search</module>
+		<module>streams</module>
+		<module>common</module>
+		<module>adapter</module>
 	</modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>

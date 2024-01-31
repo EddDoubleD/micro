@@ -1,0 +1,11 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: adapter
+    devtools:
+      restart:
+        enabled: true
+  eureka:
+    instance:
+      instance-id: ${spring:application:name}:${spring:application:instance_id:${random:value}}

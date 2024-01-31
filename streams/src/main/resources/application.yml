@@ -1,0 +1,42 @@
+server:
+  port: 8084
+spring:
+  application:
+    name: streams
+    devtools:
+      restart:
+        enabled: true
+  eureka:
+    instance:
+      instance-id: ${spring:application:name}:${spring:application:instance_id:${random:value}}
+  cloud:
+    stream:
+      bindings:
+        statisticProcessor-in-0:
+          destination: log
+        statisticProcessor-out-0:
+          destination: statistic
+        alertsProcessor-in-0:
+          destination: statistic
+      kafka:
+        binder:
+          brokers: localhost:9092
+        streams:
+          binder:
+            configuration:
+              processing:
+                guarantee: exactly_once
+              default:
+                timestamp:
+                  extractor: org.united.project.micro.common.Timestamped
+            functions:
+              averageProcessor:
+                applicationId: statisticProcessor-v1
+              alertsProcessor:
+                applicationId: alertsProcessor-v1
+    function:
+      definition: statisticProcessor;alertsProcessor;
+
+logging:
+  level:
+    org.apache.kafka.streams: DEBUG
