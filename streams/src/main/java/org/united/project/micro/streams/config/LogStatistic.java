@@ -1,4 +1,4 @@
-package org.united.project.micro.strams.config;
+package org.united.project.micro.streams.config;
 
 
 import lombok.AllArgsConstructor;

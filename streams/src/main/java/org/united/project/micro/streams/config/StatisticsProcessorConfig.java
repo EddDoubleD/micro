@@ -1,6 +1,7 @@
-package org.united.project.micro.strams.config;
+package org.united.project.micro.streams.config;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.*;
@@ -14,6 +15,7 @@ import java.util.function.Function;
 
 
 @Configuration
+@Slf4j
 public class StatisticsProcessorConfig {
     @Bean
     public Function<KStream<Long, LogRecord>, KStream<Long, LogStatistic>> statisticProcessor() {
@@ -40,10 +42,12 @@ public class StatisticsProcessorConfig {
     }
 
     private LogStatistic agg(Long deviceId, LogRecord incoming, LogStatistic aggState) {
+        log.info("aggregate {}", incoming.toString());
         return new LogStatistic();
     }
 
     private LogStatistic init() {
+        log.info("init");
         return new LogStatistic();
     }
 }

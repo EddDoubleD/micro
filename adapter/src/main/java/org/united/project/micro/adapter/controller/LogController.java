@@ -15,7 +15,7 @@ import static org.united.project.micro.adapter.dto.Funcs.toLogRecord;
 
 @RestController
 @RequestMapping("/api/v1/log")
-@Slf4j
+// @Slf4j
 public class LogController {
 
     private final LogRecordSender sender;
@@ -26,6 +26,7 @@ public class LogController {
 
     @PostMapping
     public void collectLog(@Valid @RequestBody IncomeLogRecord record) {
+        // log.info("message {}", record);
         sender.send(toLogRecord.apply(record));
     }
 

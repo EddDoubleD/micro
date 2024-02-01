@@ -12,8 +12,7 @@ import java.util.function.Function;
 
 @UtilityClass
 public class Funcs {
-
-    private static final String pattern = "hh:mm:ss a, EEE M/d/uuuu";
+    private static final String pattern = "yyyy-MM-dd HH:mm:ss";
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(pattern, Locale.ROOT);
     private static final ZoneId zoneId = ZoneId.of("Europe/Moscow");
 

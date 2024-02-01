@@ -1,5 +1,5 @@
 server:
-  port: 8084
+  port: 8085
 spring:
   application:
     name: streams
@@ -13,11 +13,11 @@ spring:
     stream:
       bindings:
         statisticProcessor-in-0:
-          destination: log
+          destination: log-topic
         statisticProcessor-out-0:
-          destination: statistic
+          destination: statistic-topic
         alertsProcessor-in-0:
-          destination: statistic
+          destination: statistic-topic
       kafka:
         binder:
           brokers: localhost:9092
@@ -28,15 +28,16 @@ spring:
                 guarantee: exactly_once
               default:
                 timestamp:
-                  extractor: org.united.project.micro.common.Timestamped
+                  extractor: org.united.project.micro.streams.LogTimestampExtractor
             functions:
               averageProcessor:
                 applicationId: statisticProcessor-v1
               alertsProcessor:
                 applicationId: alertsProcessor-v1
+            application-id: streams
     function:
       definition: statisticProcessor;alertsProcessor;
 
-logging:
-  level:
-    org.apache.kafka.streams: DEBUG
+# logging:
+#  level:
+#    org.apache.kafka.streams: DEBUG
