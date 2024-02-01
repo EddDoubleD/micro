@@ -11,12 +11,12 @@ import java.util.function.Consumer;
 @Configuration
 public class AlertsProcessorConfig {
     @Bean
-    public Consumer<KStream<Long, LogStatistic>> alertsProcessor() {
+    public Consumer<KStream<Long, LogStatisticAggregation>> alertsProcessor() {
         return input -> input.foreach(this::thresholdAlert);
     }
 
-    private void thresholdAlert(Long id, LogStatistic statistic) {
-        if (statistic.getErrorCount() > 10) {
+    private void thresholdAlert(Long id, LogStatisticAggregation statistic) {
+        if (statistic.getErrorCount() > 3 || statistic.getPercent() > 0.2) {
             log.warn("alert attention on server {} error {}", id, statistic.getErrorCount());
             return;
         }

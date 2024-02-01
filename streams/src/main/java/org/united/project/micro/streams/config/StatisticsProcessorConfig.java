@@ -18,7 +18,7 @@ import java.util.function.Function;
 @Slf4j
 public class StatisticsProcessorConfig {
     @Bean
-    public Function<KStream<Long, LogRecord>, KStream<Long, LogStatistic>> statisticProcessor() {
+    public Function<KStream<Long, LogRecord>, KStream<Long, LogStatisticAggregation>> statisticProcessor() {
         return input -> input
             .groupByKey()
             .windowedBy(
@@ -37,17 +37,39 @@ public class StatisticsProcessorConfig {
             .map(this::avg);
     }
 
-    private KeyValue<Long, LogStatistic> avg(Windowed<Long> window, LogStatistic aggState) {
-        return KeyValue.pair(window.key(), new LogStatistic(1, 1));
+    private KeyValue<Long, LogStatisticAggregation> avg(Windowed<Long> window, LogStatistic aggState) {
+        double percent;
+        if (aggState.getTotalCount()  == 0) {
+            percent = 0;
+        } else {
+            percent = aggState.getErrorCount() / aggState.getTotalCount();
+        }
+        return KeyValue.pair(
+                window.key(),
+                new LogStatisticAggregation(
+                        window.key(),
+                        aggState.getErrorCount(),
+                        percent,
+                        window.window().endTime()
+                )
+        );
     }
 
     private LogStatistic agg(Long deviceId, LogRecord incoming, LogStatistic aggState) {
-        log.info("aggregate {}", incoming.toString());
-        return new LogStatistic();
+        if (incoming.getCode() >= 400) {
+            return new LogStatistic(
+                    aggState.getErrorCount() + 1,
+                    aggState.getTotalCount() + 1
+            );
+        }
+
+        return new LogStatistic(
+                aggState.getErrorCount(),
+                aggState.getTotalCount() + 1
+        );
     }
 
     private LogStatistic init() {
-        log.info("init");
-        return new LogStatistic();
+        return new LogStatistic(0, 0);
     }
 }
